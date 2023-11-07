@@ -30,13 +30,13 @@ public class User implements UserDetails {
     @NotEmpty(message = "укажите фамилию")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Email(message = "введенные данные не соответствуют email")
     @NotEmpty(message = "укажите email")
     private String email;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
     public User() {
@@ -123,6 +123,14 @@ public class User implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String getRolesToString() {
+        String res = "";
+        for (Role role : roles) {
+            res = res + role.toString().replace("ROLE_", "") + " ";
+        }
+        return res;
     }
 
     public void setRoles(Set<Role> roles) {
